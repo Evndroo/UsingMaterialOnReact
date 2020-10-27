@@ -1,24 +1,25 @@
-import logo from './logo.svg';
 import './App.css';
+import FomularioCadastro from './Components/FormularioCadastro';
+import { Container, Typography } from "@material-ui/core"
+import "fontsource-roboto"
+
+function handleFormSubmit(conteudo){
+  console.log(conteudo)
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container maxWidth="sm" component="article">
+      <Typography 
+        color="primary" 
+        align="center" 
+        variant="h3" 
+        component="h1"
+      >
+        Formulario de cadastro
+      </Typography>
+      <FomularioCadastro onSubmit={handleFormSubmit}/>
+    </Container>
   );
 }
 
