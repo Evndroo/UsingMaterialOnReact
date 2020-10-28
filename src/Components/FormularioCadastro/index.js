@@ -1,101 +1,36 @@
-import React, {useState} from 'react';
-import { Button, TextField, Switch, FormControlLabel } from "@material-ui/core";
-//import "./styles.css"
+import React, { useState } from 'react';
+import FormDadosAutenticacao from './FormDadosAutenticacao';
+import FormDadosLocalizacao from './FormDadosLocalizazao';
+import FormDadosPessoais from './FormDadosPessoais';
 
-function FomularioCadastro({onSubmit}) {
-    const [name, setName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [cpf, setCpf] = useState("");
-    const [promotions, setPromotions] = useState(true);
-    const [newsLetter, setNewsLetter] = useState(true);
 
-    const [errors, setErrors] = useState({cpf:{valid:true, message:"Insira apenas números"}});
+
+function FomularioCadastro({ onSubmit }) {
+    const [step, setStep] = useState(0);
+    const [dados, setDados] = useState({});
+    const forms = [
+        <FormDadosAutenticacao onSubmit={onFormSubmit} />, 
+        <FormDadosPessoais onSubmit={onFormSubmit} />,
+        <FormDadosLocalizacao onSubmit={onFormSubmit} />,
+        <h1 align="center">Cadastro realizado com sucesso</h1>
+    ]
+
+    async function onFormSubmit(novosDados) {
+        await setDados({ ...dados, ...novosDados });
+
+        if (step === 2) {
+            onSubmit(dados)
+        }
+
+        setStep(step + 1);
+    }
+
+    
 
     return (
-        <form 
-            onSubmit={(event)=>{
-                event.preventDefault();
-                onSubmit({name, lastName, cpf, promotions, newsLetter})
-            }}
-        >
-            <TextField
-                value={name}
-                onChange={e =>{setName(e.target.value)}}
-                margin="normal"
-                variant="outlined"
-                label="Nome"
-                id="name"
-                fullWidth
-            />
-
-            <TextField 
-                value={lastName}
-                onChange={e =>{setLastName(e.target.value)}}
-                margin="normal" 
-                variant="outlined" 
-                label="Sobrenome" 
-                id="lastName" 
-                fullWidth 
-            />
-        
-            <TextField 
-                value={cpf}
-                error={!errors.cpf.valid}
-                helperText={errors.cpf.message}
-                onChange={e =>{setCpf(e.target.value)}}
-                onBlur={e =>{
-                    let valid = true;
-                    let message = "Insira apenas números";
-
-                    if(e.target.value.length !== 11){
-                        valid = false;
-                        message = "O CPF deve conter apenas números, esperamos que ele tenha 11 dígitos"
-                    }
-
-                    setErrors({...errors, cpf:{valid, message}})
-                }}
-                margin="normal" 
-                variant="outlined" 
-                label="CPF" 
-                id="cpf" 
-                fullWidth 
-            />
-
-            <FormControlLabel 
-                label="Promoções" 
-                control={
-                    <Switch
-                        checked={promotions}
-                        onChange={e =>{setPromotions(e.target.checked)}}
-                        name="promotions" 
-                        color="primary" 
-                    />
-                } 
-            />
-
-            <FormControlLabel 
-                label="Novidades" 
-                control={
-                    <Switch 
-                        checked={newsLetter}
-                        onChange={e =>{setNewsLetter(e.target.checked)}} 
-                        name="newsLetter"
-                        color="primary" 
-                    />
-                } 
-            />
-
-            <Button 
-                variant="contained" 
-                color="primary" 
-                fullWidth 
-                type="submit"
-                disabled={!errors.cpf.valid}
-            >
-                Cadastrar
-            </Button>
-
-        </form>
+        <>
+            {forms[step]}
+        </>
     )
 }
 
